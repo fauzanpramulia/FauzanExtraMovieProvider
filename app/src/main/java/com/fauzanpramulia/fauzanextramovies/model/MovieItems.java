@@ -1,11 +1,21 @@
 package com.fauzanpramulia.fauzanextramovies.model;
 
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import static android.provider.BaseColumns._ID;
+import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.OVERVIEW;
+import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.POSTER_PATH;
+import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.RELEASE_DATE;
+import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.TITLE;
+import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.VOTE_AVERAGE;
+import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.getColumnInt;
+import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.getColumnString;
 
 public class MovieItems implements Parcelable {
     public int id;
@@ -14,6 +24,9 @@ public class MovieItems implements Parcelable {
     public double vote_average;
     public String release_date;
     public String poster_path;
+
+    public MovieItems() {
+    }
 
     public MovieItems(int id, String title, String overview, double vote_average, String release_date, String poster_path) {
         this.id = id;
@@ -88,7 +101,15 @@ public class MovieItems implements Parcelable {
         dest.writeString(this.poster_path);
     }
 
-    protected MovieItems(Parcel in) {
+    public MovieItems(Cursor cursor){
+        this.id = getColumnInt(cursor, _ID);
+        this.title = getColumnString(cursor, TITLE);
+        this.overview = getColumnString(cursor, OVERVIEW);
+        this.vote_average = getColumnInt(cursor, VOTE_AVERAGE);
+        this.release_date = getColumnString(cursor, RELEASE_DATE);
+        this.poster_path = getColumnString(cursor, POSTER_PATH);
+    }
+    public MovieItems(Parcel in) {
         this.id = in.readInt();
         this.title = in.readString();
         this.overview = in.readString();
