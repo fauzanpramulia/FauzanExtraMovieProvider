@@ -1,5 +1,7 @@
 package com.fauzanpramulia.fauzanextramovies.fragment;
 
+import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -62,7 +64,9 @@ public class Tab2Upcoming extends Fragment {
             public void onResponse(Call<MovieList> call, Response<MovieList> response)   {
                 MovieList movieList = response.body();
                 List<MovieItems> listMovieItem = movieList.results;
-                adapter.setDataFilm(new ArrayList<MovieItems>(listMovieItem));
+
+
+                adapter.setDataFilm((ArrayList<MovieItems>) listMovieItem);
                 recyclerView.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.INVISIBLE);
             }
@@ -73,5 +77,21 @@ public class Tab2Upcoming extends Fragment {
             }
         });
 
+    }
+    public Cursor getCursorFromList (List<MovieItems> movies){
+        MatrixCursor cursor = new MatrixCursor(
+                new String[]{"title","overview","vote_average","release_date","poster_path"}
+        );
+        for (MovieItems movie : movies){
+            cursor.newRow().add("_id", movie.getId())
+                    .add("title",movie.getTitle())
+                    .add("overview", movie.getOverview())
+                    .add("vote_average", movie.getVote_average())
+                    .add("release_date", movie.getRelease_date())
+                    .add("poster_path", movie.getPoster_path());
+        }
+
+
+        return cursor;
     }
 }

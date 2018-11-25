@@ -14,5 +14,6 @@
     <string name="tayang">Tayang</string>
     <string name="segera">Segera</string>
     <string name="cari_film">Cari Film</string>
-    <string name="bahasa_film">id-ID</string>
+    <string name="bahasa_film">en-US</string>
+    <!--<string name="bahasa_film">id-IDid-ID</string>-->
 </resources>

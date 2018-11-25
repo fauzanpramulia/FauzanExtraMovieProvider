@@ -1,5 +1,7 @@
 package com.fauzanpramulia.fauzanextramovies.fragment;
 
+import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,11 +30,14 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.provider.MediaStore.Audio.Playlists.Members._ID;
+
 public class Tab1NowPlaying extends Fragment{
     ProgressBar progressBar;
     RecyclerView recyclerView;
     MovieAdapter adapter;
-    ArrayList<MovieItems> daftarFilm = new ArrayList<>();
+//    ArrayList<MovieItems> daftarFilm = new ArrayList<>();
+    Cursor daftarFilm;
 
     @Nullable
     @Override
@@ -65,7 +70,8 @@ public class Tab1NowPlaying extends Fragment{
             public void onResponse(Call<MovieList> call, Response<MovieList> response)   {
                 MovieList movieList = response.body();
                 List<MovieItems> listMovieItem = movieList.results;
-                adapter.setDataFilm(new ArrayList<MovieItems>(listMovieItem));
+
+                adapter.setDataFilm((ArrayList<MovieItems>) listMovieItem);
                 recyclerView.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.INVISIBLE);
             }
@@ -76,6 +82,23 @@ public class Tab1NowPlaying extends Fragment{
             }
         });
 
+    }
+
+    public Cursor getCursorFromList (List<MovieItems> movies){
+        MatrixCursor cursor = new MatrixCursor(
+          new String[]{"id","title","overview","vote_average","release_date","poster_path"}
+        );
+        for (MovieItems movie : movies){
+            cursor.newRow().add("id", movie.getId())
+                    .add("title",movie.getTitle())
+                    .add("overview", movie.getOverview())
+                    .add("vote_average", movie.getVote_average())
+                    .add("release_date", movie.getRelease_date())
+                    .add("poster_path", movie.getPoster_path());
+        }
+
+
+        return cursor;
     }
 
 

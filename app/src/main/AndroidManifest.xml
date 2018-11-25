@@ -19,6 +19,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".DetailActivity"></activity>
+        <provider
+            android:authorities="com.fauzanpramulia.fauzanextramovies"
+            android:name=".provider.MovieProvider"
+            android:exported="true"
+            android:readPermission="com.dicoding.mynotesapp.READ_DATABASE"
+            android:writePermission="com.dicoding.mynotesapp.WRITE_DATABASE" />
     </application>
 
 </manifest>

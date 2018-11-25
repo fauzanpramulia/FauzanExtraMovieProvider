@@ -1,12 +1,15 @@
 package com.fauzanpramulia.fauzanextramovies;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
@@ -14,6 +17,14 @@ import com.fauzanpramulia.fauzanextramovies.model.MovieItems;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.CONTENT_URI;
+import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.ID;
+import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.OVERVIEW;
+import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.POSTER_PATH;
+import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.RELEASE_DATE;
+import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.TITLE;
+import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.VOTE_AVERAGE;
 
 public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.detail_title)TextView detailTitle;
@@ -29,7 +40,9 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
 
-            MovieItems movie = getIntent().getParcelableExtra(EXTRA_DETAIL_MOVIE);
+        Uri uri = getIntent().getData();
+
+            final MovieItems movie = getIntent().getParcelableExtra(EXTRA_DETAIL_MOVIE);
 
             detailTitle.setText(movie.getTitle());
             detailDesk.setText(movie.getOverview());
@@ -47,10 +60,27 @@ public class DetailActivity extends AppCompatActivity {
         toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
+                if (isChecked){
+                    ContentValues values = new ContentValues();
+                    values.put(ID,movie.getId());
+                    values.put(TITLE,movie.getTitle());
+                    values.put(OVERVIEW,movie.getOverview());
+                    values.put(VOTE_AVERAGE,movie.getVote_average());
+                    values.put(RELEASE_DATE,movie.getRelease_date());
+                    values.put(POSTER_PATH,movie.getPoster_path());
+
+                    getContentResolver().insert(CONTENT_URI,values);
+
+                    Toast.makeText(DetailActivity.this, "Film "+movie.getTitle()+"Menjadi Favorit", Toast.LENGTH_SHORT).show();
                     toggleButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.img_star_yellow));
-                else
+                }
+
+
+                else{
+                    Toast.makeText(DetailActivity.this, "Dihapus dari favorit", Toast.LENGTH_SHORT).show();
                     toggleButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.img_star_grey));
+                }
+
             }
         });
     }
