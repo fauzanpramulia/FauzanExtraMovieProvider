@@ -56,10 +56,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id==R.id.menu_refresh){
-            //getNowPlayingMoview();
-            //loadDummyData();
-        } if (id==R.id.menu_language){
+//        if (id==R.id.menu_refresh){
+//            //getNowPlayingMoview();
+//            //loadDummyData();
+//        }
+        if (id==R.id.menu_language){
             Intent intent = new Intent(Settings.ACTION_LOCALE_SETTINGS);
             startActivity(intent);
         }
