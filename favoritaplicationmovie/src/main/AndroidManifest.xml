@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.fauzanpramulia.fauzanextramovies">
-
-    <uses-permission android:name="android.permission.INTERNET" />
+    package="com.fauzanpramulia.favoritaplicationmovie">
+<uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -18,14 +17,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DetailActivity" />
-         <provider
-         android:authorities="com.fauzanpramulia.fauzanextramovies.provider"
-         android:name=".provider.MovieProvider"
-         android:exported="true"
-         android:readPermission="com.fauzanpramulia.favoritaplicationmovie.READ_DATABASE"
-         android:writePermission="com.fauzanpramulia.favoritaplicationmovie.WRITE_DATABASE" />
-        <activity android:name=".FavoritActivity"></activity>
+        <activity android:name=".DetailActivity"></activity>
     </application>
 
 </manifest>

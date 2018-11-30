@@ -10,4 +10,14 @@
         android:icon="@drawable/ic_refresh_black_24dp"
         android:title="@string/refresh"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/favorit"
+        android:icon="@drawable/ic_refresh_black_24dp"
+        android:title="@string/favorit"
+         />
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/ic_refresh_black_24dp"
+        android:title="@string/home"
+        />
 </menu>

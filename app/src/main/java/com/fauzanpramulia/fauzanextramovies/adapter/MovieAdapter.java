@@ -19,7 +19,6 @@ import com.fauzanpramulia.fauzanextramovies.model.MovieItems;
 
 import java.util.ArrayList;
 
-import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.CONTENT_URI;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder> {
     ArrayList<MovieItems> dataFilm;
@@ -61,8 +60,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
                 public void onClick(View v) {
                     // sending data process
                     Intent i = new Intent(context, DetailActivity.class);
-                    Uri uri = Uri.parse(CONTENT_URI+"/"+ v.getId());
-                    i.setData(uri);
+//                    Uri uri = Uri.parse(CONTENT_URI+"/"+ v.getId());
+//                    i.setData(uri);
                     i.putExtra(DetailActivity.EXTRA_DETAIL_MOVIE, dataFilm.get(position));
 
                     context.startActivity(i);

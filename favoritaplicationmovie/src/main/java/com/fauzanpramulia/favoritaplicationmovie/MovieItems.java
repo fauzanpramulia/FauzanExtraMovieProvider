@@ -1,26 +1,15 @@
-package com.fauzanpramulia.fauzanextramovies.model;
+package com.fauzanpramulia.favoritaplicationmovie;
 
-import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-
-
-public class MovieItems implements Parcelable {
+public class MovieItems implements Parcelable{
     public int id;
     public String title;
     public String overview;
     public double vote_average;
     public String release_date;
     public String poster_path;
-
-
-    public MovieItems() {
-    }
 
     public MovieItems(int id, String title, String overview, double vote_average, String release_date, String poster_path) {
         this.id = id;
@@ -95,15 +84,7 @@ public class MovieItems implements Parcelable {
         dest.writeString(this.poster_path);
     }
 
-//    public MovieItems(Cursor cursor){
-//        this.id = getColumnInt(cursor, ID);
-//        this.title = getColumnString(cursor, TITLE);
-//        this.overview = getColumnString(cursor, OVERVIEW);
-//        this.vote_average = getColumnInt(cursor, VOTE_AVERAGE);
-//        this.release_date = getColumnString(cursor, RELEASE_DATE);
-//        this.poster_path = getColumnString(cursor, POSTER_PATH);
-//    }
-    public MovieItems(Parcel in) {
+    protected MovieItems(Parcel in) {
         this.id = in.readInt();
         this.title = in.readString();
         this.overview = in.readString();

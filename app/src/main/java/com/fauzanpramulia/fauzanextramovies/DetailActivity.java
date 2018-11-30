@@ -1,5 +1,6 @@
 package com.fauzanpramulia.fauzanextramovies;
 
+import android.arch.persistence.room.Room;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,18 +14,15 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
+import com.fauzanpramulia.fauzanextramovies.db.AppDatabase;
+import com.fauzanpramulia.fauzanextramovies.db.Favorit;
 import com.fauzanpramulia.fauzanextramovies.model.MovieItems;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.CONTENT_URI;
-import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.ID;
-import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.OVERVIEW;
-import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.POSTER_PATH;
-import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.RELEASE_DATE;
-import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.TITLE;
-import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.VOTE_AVERAGE;
 
 public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.detail_title)TextView detailTitle;
@@ -34,13 +32,19 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.detail_poster) ImageView imgView;
     @BindView(R.id.myToggleButton) ToggleButton toggleButton;
     public static String EXTRA_DETAIL_MOVIE = "extra_detail_movie";
+    AppDatabase db;
+    int favorite;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
+        db = Room.databaseBuilder(this, AppDatabase.class, "tmdb.db")
+                .allowMainThreadQueries()
+                .build();
 
-        Uri uri = getIntent().getData();
+//        Uri uri = getIntent().getData();
 
             final MovieItems movie = getIntent().getParcelableExtra(EXTRA_DETAIL_MOVIE);
 
@@ -53,35 +57,81 @@ public class DetailActivity extends AppCompatActivity {
             Glide.with(this)
                     .load(url)
                     .into(imgView);
-
-
-        toggleButton.setChecked(false);
-        toggleButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.img_star_grey));
+            int ada = checkFavorite(movie);
+            if (ada==1){
+                toggleButton.setChecked(true);
+                toggleButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.img_star_yellow));
+            }else{
+                toggleButton.setChecked(false);
+                toggleButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.img_star_grey));
+            }
         toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
-                    ContentValues values = new ContentValues();
-                    values.put(ID,movie.getId());
-                    values.put(TITLE,movie.getTitle());
-                    values.put(OVERVIEW,movie.getOverview());
-                    values.put(VOTE_AVERAGE,movie.getVote_average());
-                    values.put(RELEASE_DATE,movie.getRelease_date());
-                    values.put(POSTER_PATH,movie.getPoster_path());
 
-                    getContentResolver().insert(CONTENT_URI,values);
-
+                    saveMovieToDb(movie);
                     Toast.makeText(DetailActivity.this, "Film "+movie.getTitle()+"Menjadi Favorit", Toast.LENGTH_SHORT).show();
                     toggleButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.img_star_yellow));
                 }
-
-
                 else{
+                    deleteFromDb(movie);
                     Toast.makeText(DetailActivity.this, "Dihapus dari favorit", Toast.LENGTH_SHORT).show();
                     toggleButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.img_star_grey));
                 }
 
             }
         });
+    }
+
+
+
+
+    private void saveMovieToDb(final MovieItems movie) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                    Favorit favorit = new Favorit();
+                    favorit.id = movie.id;
+                    favorit.title = movie.title;
+                    favorit.overview = movie.overview;
+                    favorit.vote_average = movie.vote_average;
+                    favorit.release_date = movie.release_date;
+                    favorit.poster_path = movie.poster_path;
+
+                    db.favoritDao().insertFavorit(favorit);
+
+            }
+        }).start();
+
+    }
+
+    private void deleteFromDb(final MovieItems movie) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                Favorit favorit = new Favorit();
+                favorit.id = movie.id;
+                favorit.title = movie.title;
+                favorit.overview = movie.overview;
+                favorit.vote_average = movie.vote_average;
+                favorit.release_date = movie.release_date;
+                favorit.poster_path = movie.poster_path;
+
+                db.favoritDao().delete(favorit);
+            }
+        }).start();
+
+    }
+
+    private int checkFavorite(final MovieItems movie) {
+        int favorite;
+
+                favorite =  db.favoritDao().checkFavorite(movie.getId());
+
+        return favorite;
     }
 }
