@@ -2,6 +2,7 @@ package com.fauzanpramulia.fauzanextramovies.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +18,8 @@ import com.fauzanpramulia.fauzanextramovies.R;
 import com.fauzanpramulia.fauzanextramovies.model.MovieItems;
 
 import java.util.ArrayList;
+
+import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.CONTENT_URI;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder> {
     ArrayList<MovieItems> dataFilm;
@@ -39,9 +42,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
 
     @Override
     public void onBindViewHolder(@NonNull MovieHolder holder, final int position) {
+        final MovieItems movie;
         if (dataFilm.get(position).getOverview() != null) {
             {
-                MovieItems movie = dataFilm.get(position);
+                 movie= dataFilm.get(position);
                 holder.textTitle.setText(movie.getTitle());
                 String potongDesk = truncate(dataFilm.get(position).getOverview(), 45);
                 holder.textDesk.setText(potongDesk);
@@ -58,6 +62,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
                 public void onClick(View v) {
                     // sending data process
                     Intent i = new Intent(context, DetailActivity.class);
+                    Uri uri = Uri.parse(CONTENT_URI+"/"+ movie.getId());
+                    i.setData(uri);
                     i.putExtra(DetailActivity.EXTRA_DETAIL_MOVIE, dataFilm.get(position));
                     context.startActivity(i);
 

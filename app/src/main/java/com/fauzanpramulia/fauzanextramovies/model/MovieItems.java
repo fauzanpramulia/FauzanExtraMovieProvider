@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import static android.provider.BaseColumns._ID;
+import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.ID;
 import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.OVERVIEW;
 import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.POSTER_PATH;
 import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.RELEASE_DATE;
@@ -102,7 +103,7 @@ public class MovieItems implements Parcelable {
     }
 
     public MovieItems(Cursor cursor){
-        this.id = getColumnInt(cursor, _ID);
+        this.id = getColumnInt(cursor, ID);
         this.title = getColumnString(cursor, TITLE);
         this.overview = getColumnString(cursor, OVERVIEW);
         this.vote_average = getColumnInt(cursor, VOTE_AVERAGE);

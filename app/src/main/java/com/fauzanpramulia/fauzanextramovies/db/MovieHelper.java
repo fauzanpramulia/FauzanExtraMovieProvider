@@ -10,7 +10,7 @@ import com.fauzanpramulia.fauzanextramovies.model.MovieItems;
 
 import java.util.ArrayList;
 
-import static android.provider.BaseColumns._ID;
+import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.ID;
 import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.OVERVIEW;
 import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.POSTER_PATH;
 import static com.fauzanpramulia.fauzanextramovies.db.DatabaseContract.MovieColumns.RELEASE_DATE;
@@ -43,14 +43,14 @@ public class MovieHelper {
 
     public ArrayList<MovieItems> query() {
         ArrayList<MovieItems> arrayList = new ArrayList<MovieItems>();
-        Cursor cursor = database.query(DATABASE_TABLE, null, null, null, null, null, _ID + " DESC", null);
+        Cursor cursor = database.query(DATABASE_TABLE, null, null, null, null, null, ID + " DESC", null);
         cursor.moveToFirst();
         MovieItems movie;
         if (cursor.getCount() > 0) {
             do {
 
                 movie = new MovieItems();
-                movie.setId(cursor.getInt(cursor.getColumnIndexOrThrow(_ID)));
+                movie.setId(cursor.getInt(cursor.getColumnIndexOrThrow(ID)));
                 movie.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(TITLE)));
                 movie.setOverview(cursor.getString(cursor.getColumnIndexOrThrow(OVERVIEW)));
                 movie.setVote_average(cursor.getDouble(cursor.getColumnIndexOrThrow(VOTE_AVERAGE)));
@@ -69,6 +69,8 @@ public class MovieHelper {
 
     public long insert(MovieItems movie) {
         ContentValues initialValues = new ContentValues();
+
+        initialValues.put(ID, movie.getId());
         initialValues.put(TITLE, movie.getTitle());
         initialValues.put(OVERVIEW, movie.getOverview());
         initialValues.put(VOTE_AVERAGE, movie.getVote_average());
@@ -80,22 +82,24 @@ public class MovieHelper {
 
     public int update(MovieItems movie) {
         ContentValues args = new ContentValues();
+
+        args.put(ID, movie.getId());
         args.put(TITLE, movie.getTitle());
         args.put(OVERVIEW, movie.getOverview());
         args.put(VOTE_AVERAGE, movie.getVote_average());
         args.put(RELEASE_DATE, movie.getRelease_date());
         args.put(POSTER_PATH, movie.getPoster_path());
-        return database.update(DATABASE_TABLE, args, _ID + "= '" + movie.getId() + "'", null);
+        return database.update(DATABASE_TABLE, args, ID + "= '" + movie.getId() + "'", null);
     }
 
 
     public int delete(int id) {
-        return database.delete(TABLE_NAME, _ID + " = '" + id + "'", null);
+        return database.delete(TABLE_NAME, ID + " = '" + id + "'", null);
     }
 
     public Cursor queryByIdProvider(String id){
         return database.query(DATABASE_TABLE,null
-                ,_ID + " = ?"
+                ,ID + " = ?"
                 ,new String[]{id}
                 ,null
                 ,null
@@ -109,15 +113,15 @@ public class MovieHelper {
                 ,null
                 ,null
                 ,null
-                ,_ID + " DESC");
+                ,ID + " DESC");
     }
     public long insertProvider(ContentValues values){
         return database.insert(DATABASE_TABLE,null,values);
     }
     public int updateProvider(String id,ContentValues values){
-        return database.update(DATABASE_TABLE,values,_ID +" = ?",new String[]{id} );
+        return database.update(DATABASE_TABLE,values,ID +" = ?",new String[]{id} );
     }
     public int deleteProvider(String id){
-        return database.delete(DATABASE_TABLE,_ID + " = ?", new String[]{id});
+        return database.delete(DATABASE_TABLE,ID + " = ?", new String[]{id});
     }
 }
